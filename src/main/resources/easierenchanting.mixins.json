@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "easierenchanting.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "EnchantmentScreenHandlerMixin"
+  ],
+  "client": [
+    "EnchantmentScreenMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
