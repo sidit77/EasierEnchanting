@@ -1,5 +1,6 @@
 package easierenchanting.mixin;
 
+import easierenchanting.EasierEnchanting;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
@@ -61,13 +62,13 @@ public abstract class EnchantmentScreenHandlerMixin  extends ScreenHandler {
         ItemStack itemStack = this.inventory.getStack(0);
         ItemStack itemStack2 = this.inventory.getStack(1);
         if(id == 3){
-            if(itemStack2.getCount() < 6 && !player.abilities.creativeMode)
+            if(itemStack2.getCount() < EasierEnchanting.lapiscost && !player.abilities.creativeMode)
                 return false;
             if(this.enchantmentPower[0] <= 0)
                 return false;
             this.context.run((world, blockPos) -> {
                 if (!player.abilities.creativeMode) {
-                    itemStack2.decrement(6);
+                    itemStack2.decrement(EasierEnchanting.lapiscost);
                     if (itemStack2.isEmpty()) {
                         this.inventory.setStack(1, ItemStack.EMPTY);
                     }

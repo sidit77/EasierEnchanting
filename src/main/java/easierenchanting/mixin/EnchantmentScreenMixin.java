@@ -1,6 +1,7 @@
 package easierenchanting.mixin;
 
 import com.google.common.collect.Lists;
+import easierenchanting.EasierEnchanting;
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -128,8 +129,8 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
         if (bookopen && this.isPointWithinBounds(13, 18, 37, 21, (double)mouseX, (double)mouseY)) {
             List<Text> list = Lists.newArrayList();
             list.add(new TranslatableText("container.enchant.reroll"));
-            TranslatableText lapiscost = new TranslatableText("container.enchant.lapis.many", new Object[]{6});
-            list.add(lapiscost.formatted(((EnchantmentScreenHandler)this.handler).getLapisCount() >= 6 ? Formatting.GRAY : Formatting.RED));
+            TranslatableText lapiscost = new TranslatableText("container.enchant.lapis.many", EasierEnchanting.lapiscost);
+            list.add(lapiscost.formatted(((EnchantmentScreenHandler)this.handler).getLapisCount() >= EasierEnchanting.lapiscost ? Formatting.GRAY : Formatting.RED));
             this.renderTooltip(matrices, list, mouseX, mouseY);
         }
 
