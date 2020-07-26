@@ -3,7 +3,8 @@
   "package": "easierenchanting.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "EnchantmentScreenHandlerMixin"
+    "EnchantmentScreenHandlerMixin",
+    "PlayerEntityMixin"
   ],
   "client": [
     "EnchantmentScreenMixin"
