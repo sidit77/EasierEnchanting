@@ -71,9 +71,11 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
             int cost = ((IEnchantmentScreenHandlerExtension)this.handler).getLapisCost();
             List<Text> list = Lists.newArrayList();
             list.add(new TranslatableText("container.enchant.reroll"));
-            TranslatableText lapiscost = new TranslatableText("container.enchant.lapis.many", cost);
-            list.add(LiteralText.EMPTY);
-            list.add(lapiscost.formatted(this.handler.getLapisCount() >= cost ? Formatting.GRAY : Formatting.RED));
+            if (!EasierEnchanting.cleantooltips) {
+                TranslatableText lapiscost = new TranslatableText("container.enchant.lapis.many", cost);
+                list.add(LiteralText.EMPTY);
+                list.add(lapiscost.formatted(this.handler.getLapisCount() >= cost ? Formatting.GRAY : Formatting.RED));
+            }
             this.renderTooltip(matrices, list, mouseX, mouseY);
         }
     }
@@ -81,10 +83,12 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
     @Inject(method = "render", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target =
             "Lnet/minecraft/client/gui/screen/ingame/EnchantmentScreen;renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Ljava/util/List;II)V"))
     public void fullText(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci, boolean bl, int i, int j, int k, Enchantment enchantment, int l, int m, List<Text> list){
-        list.remove(0);
+        if (EasierEnchanting.hardmode || EasierEnchanting.cleantooltips)
+            list.clear();
+        else
+            list.remove(0);
         list.addAll(0,
                 this.generateEnchantments(j, k).stream().map(e -> e.enchantment.getName(e.level)).collect(Collectors.toList()));
-
     }
 
     private List<EnchantmentLevelEntry> generateEnchantments(int slot, int level) {

@@ -2,27 +2,6 @@ package easierenchanting;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.event.EventFactory;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import net.fabricmc.fabric.mixin.registry.sync.client.MixinMinecraftClient;
-import net.fabricmc.fabric.mixin.resource.loader.MixinMinecraftGame;
-import net.fabricmc.loader.FabricLoader;
-import net.fabricmc.loader.launch.FabricClientTweaker;
-import net.fabricmc.loader.launch.common.FabricMixinBootstrap;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.EnchantingTableBlockEntity;
-import net.minecraft.screen.*;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Nameable;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 
 public class EasierEnchanting implements ModInitializer {
 
@@ -42,17 +20,23 @@ public class EasierEnchanting implements ModInitializer {
     public static final String MOD_NAME = "Easier Enchanting";
 
     public static int lapiscost = 6;
+    public static boolean hardmode = false;
+    public static boolean cleantooltips = false;
 
     @Override
     public void onInitialize() {
 
         log(Level.INFO, "Initializing..");
         try {
-            Path p = Paths.get("config/easierenchanting.txt");
+            Path p = Paths.get("config/"+MOD_ID+".txt");
             if(!Files.exists(p)){
                 log(Level.INFO, "config not found");
-                log(Level.INFO, "creating new config file");
-                Files.write(Paths.get("config/easierenchanting.txt"), Collections.singletonList("lapiscost:6"));
+                Files.write(p.toAbsolutePath(), Arrays.asList(
+                        "lapiscost:"+lapiscost,
+                        "hardmode:"+hardmode,
+                        "cleantooltips:"+cleantooltips
+                ));
+                log(Level.INFO, "created new config file");
             }
             for(String s : Files.readAllLines(p)){
                 String[] tokens = s.split(":");
@@ -61,13 +45,22 @@ public class EasierEnchanting implements ModInitializer {
                         lapiscost = Math.max(0, Integer.parseInt(tokens[1].trim()));
                         log(Level.INFO, "setting lapis cost to " + lapiscost);
                         break;
+                    case "hardmode":
+                        hardmode = tokens[1].trim().contains("true");
+                        if (hardmode)
+                            log(Level.INFO, "running in hard mode");
+                        break;
+                    case "cleantooltips":
+                        cleantooltips = tokens[1].trim().contains("true");
+                        if (cleantooltips)
+                            log(Level.INFO, "running with clean tooltips");
+                        break;
                 }
             }
         } catch (IOException e) {
             log(Level.ERROR, e.getMessage());
         }
     }
-
     public static void log(Level level, String message){
         LOGGER.log(level, "["+MOD_NAME+"] " + message);
     }

@@ -51,8 +51,9 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
     @Inject(method = "onButtonClick", at = @At(value = "HEAD"), cancellable = true)
     public void buttonClick(PlayerEntity player, int id, CallbackInfoReturnable<Boolean> ci){
+        ItemStack itemStack = this.inventory.getStack(0);
+        ItemStack itemStack2 = this.inventory.getStack(1);
         if(id == 3){
-            ItemStack itemStack2 = this.inventory.getStack(1);
             if((itemStack2.getCount() < getLapisCost() && !player.abilities.creativeMode)
                || this.enchantmentPower[0] <= 0){
                 ci.setReturnValue(false);
@@ -73,6 +74,10 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
                 world.playSound((PlayerEntity)null, blockPos, SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, world.random.nextFloat() * 0.1F + 0.9F);
             });
             ci.setReturnValue(true);
+        }else if(itemStack2.isEmpty() || itemStack2.getCount() < id|| player.abilities.creativeMode ||this.enchantmentPower[id] <= 0 || itemStack.isEmpty() || player.experienceLevel < id || player.experienceLevel < this.enchantmentPower[id]){
+            ci.setReturnValue(false);
+        }else if(EasierEnchanting.hardmode){
+            player.applyEnchantmentCosts(null, this.enchantmentPower[id]-(id+1));
         }
     }
 
