@@ -1,6 +1,28 @@
 package easierenchanting;
 
 import net.fabricmc.api.ModInitializer;
+
+import net.fabricmc.fabric.api.event.EventFactory;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.fabric.mixin.registry.sync.client.MixinMinecraftClient;
+import net.fabricmc.fabric.mixin.resource.loader.MixinMinecraftGame;
+import net.fabricmc.loader.FabricLoader;
+import net.fabricmc.loader.launch.FabricClientTweaker;
+import net.fabricmc.loader.launch.common.FabricMixinBootstrap;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.EnchantingTableBlockEntity;
+import net.minecraft.screen.*;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.Nameable;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,6 +31,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class EasierEnchanting implements ModInitializer {
