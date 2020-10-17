@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.sidit77.easierenchanting.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "easierenchanting.refmap.json",
+  "mixins": [
+    "EnchantmentContainerMixin",
+    "PlayerEntityMixin"
+  ],
+  "client": [
+    "EnchantmentScreenMixin"
+  ],
+  "minVersion": "0.8"
+}
