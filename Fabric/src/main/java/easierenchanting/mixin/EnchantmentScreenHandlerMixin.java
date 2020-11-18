@@ -10,6 +10,7 @@ import net.minecraft.screen.*;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import org.apache.logging.log4j.Level;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,6 +27,9 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
     @Final
     private Property easierenchant_cost;
+
+    @Dynamic
+    int hardmodeCost = 0;
 
     @Shadow
     @Final
@@ -73,6 +77,14 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
                 world.playSound((PlayerEntity)null, blockPos, SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, world.random.nextFloat() * 0.1F + 0.9F);
             });
             ci.setReturnValue(true);
+        }else{
+            hardmodeCost = this.enchantmentPower[id]-(id+1);
+        }
+    }
+    @Inject(method = "onButtonClick", at = @At(value = "RETURN"), cancellable = true)
+    public void hardmodeLevels(PlayerEntity player, int id, CallbackInfoReturnable ci){
+        if(EasierEnchanting.hardmode && ci.getReturnValueZ()){
+            player.applyEnchantmentCosts(null, hardmodeCost);
         }
     }
 
