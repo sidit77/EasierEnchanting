@@ -33,11 +33,9 @@ public class EasierEnchanting implements ModInitializer {
             }
             for(String s : Files.readAllLines(p)){
                 String[] tokens = s.split(":");
-                switch(tokens[0].trim()){
-                    case "lapiscost":
-                        lapiscost = Math.max(0, Integer.parseInt(tokens[1].trim()));
-                        log(Level.INFO, "setting lapis cost to " + lapiscost);
-                        break;
+                if ("lapiscost".equals(tokens[0].trim())) {
+                    lapiscost = Math.max(0, Integer.parseInt(tokens[1].trim()));
+                    log(Level.INFO, "setting lapis cost to " + lapiscost);
                 }
             }
         } catch (IOException e) {
