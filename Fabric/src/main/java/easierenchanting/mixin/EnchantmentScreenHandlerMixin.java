@@ -2,16 +2,19 @@ package easierenchanting.mixin;
 
 import easierenchanting.EasierEnchanting;
 import easierenchanting.IEnchantmentScreenHandlerExtension;
-import net.fabricmc.loader.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.*;
+import net.minecraft.screen.EnchantmentScreenHandler;
+import net.minecraft.screen.Property;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import org.apache.logging.log4j.Level;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,6 +27,7 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
         super(type, syncId);
     }
 
+    @Mutable
     @Final
     private Property easierenchant_cost;
 
@@ -41,7 +45,7 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
     @Shadow
     @Final
-    private int[] enchantmentPower;
+    public int[] enchantmentPower;
 
     @Inject(method = "<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/screen/ScreenHandlerContext;)V", at = @At(value = "RETURN"))
     public void init(CallbackInfo ci){
@@ -53,13 +57,13 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
     public void buttonClick(PlayerEntity player, int id, CallbackInfoReturnable<Boolean> ci){
         if(id == 3){
             ItemStack itemStack2 = this.inventory.getStack(1);
-            if((itemStack2.getCount() < getLapisCost() && !player.abilities.creativeMode)
+            if((itemStack2.getCount() < getLapisCost() && !player.getAbilities().creativeMode)
                || this.enchantmentPower[0] <= 0){
                 ci.setReturnValue(false);
                 return;
             }
             this.context.run((world, blockPos) -> {
-                if (!player.abilities.creativeMode) {
+                if (!player.getAbilities().creativeMode) {
                     itemStack2.decrement(getLapisCost());
                     if (itemStack2.isEmpty()) {
                         this.inventory.setStack(1, ItemStack.EMPTY);
@@ -70,7 +74,7 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
                 this.inventory.markDirty();
                 this.seed.set(player.getEnchantmentTableSeed());
                 this.onContentChanged(this.inventory);
-                world.playSound((PlayerEntity)null, blockPos, SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, world.random.nextFloat() * 0.1F + 0.9F);
+                world.playSound(null, blockPos, SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, world.random.nextFloat() * 0.1F + 0.9F);
             });
             ci.setReturnValue(true);
         }
