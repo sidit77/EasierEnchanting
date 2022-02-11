@@ -1,6 +1,6 @@
 # Easier Enchanting
 
-**Updated Fork: [https://github.com/fantahund/EasierEnchanting](https://github.com/fantahund/EasierEnchanting)
+**Updated Fork**: [https://github.com/fantahund/EasierEnchanting](https://github.com/fantahund/EasierEnchanting)
 
 ## Description
 
